@@ -90,6 +90,7 @@ namespace ControleDeMedicamentos.ModuloAquisição
             if (aquisicao != null)
             {
                 listaRegistros.Remove(aquisicao);
+                Console.WriteLine("Aquisição Removida!");
             }
         }
 
