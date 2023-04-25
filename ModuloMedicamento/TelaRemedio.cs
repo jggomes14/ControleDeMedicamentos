@@ -2,64 +2,67 @@
 using System;
 
 using System;
+namespace ControleDeMedicamentos.ModuloMedicamento;
+
 
 public class TelaRemedio
 {
     static RepositorioRemedio repositorio = new RepositorioRemedio();
 
-    static void Main(string[] args)
-    {
-        int opcao = 0;
-
-        do
+   
+    public void MostrarMenu()
         {
-            Console.WriteLine("===== MENU =====");
-            Console.WriteLine("1 - Inserir novo remédio");
-            Console.WriteLine("2 - Consultar remédio por nome");
-            Console.WriteLine("3 - Atualizar quantidade de remédio");
-            Console.WriteLine("4 - Visualizar remédios abaixo do limite");
-            Console.WriteLine("5 - Editar remédio");
-            Console.WriteLine("6 - Excluir remédio");
-            Console.WriteLine("7 - Verificar existência de remédio");
-            Console.WriteLine("0 - Sair");
+            int opcao = 0;
 
-            Console.Write("Escolha uma opção: ");
-            opcao = int.Parse(Console.ReadLine());
-
-            switch (opcao)
+            do
             {
-                case 1:
-                    InserirRemedio();
-                    break;
-                case 2:
-                    ConsultarRemedio();
-                    break;
-                case 3:
-                    AtualizarQuantidadeDeRemedio();
-                    break;
-                case 4:
-                    VisualizarRemediosAbaixoDoLimite();
-                    break;
-                case 5:
-                    EditarRemedio();
-                    break;
-                case 6:
-                    ExcluirRemedio();
-                    break;
-                case 7:
-                    VerificarExistenciaRemedio();
-                    break;
-                case 0:
-                    Console.WriteLine("Saindo...");
-                    break;
-                default:
-                    Console.WriteLine("Opção inválida");
-                    break;
-            }
+                Console.WriteLine("===== MENU =====");
+                Console.WriteLine("1 - Inserir novo remédio");
+                Console.WriteLine("2 - Consultar remédio por nome");
+                Console.WriteLine("3 - Atualizar quantidade de remédio");
+                Console.WriteLine("4 - Visualizar remédios abaixo do limite");
+                Console.WriteLine("5 - Editar remédio");
+                Console.WriteLine("6 - Excluir remédio");
+                Console.WriteLine("7 - Verificar existência de remédio");
+                Console.WriteLine("0 - Sair");
 
-            Console.WriteLine();
-        } while (opcao != 0);
-    }
+                Console.Write("Escolha uma opção: ");
+                opcao = int.Parse(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        InserirRemedio();
+                        break;
+                    case 2:
+                        ConsultarRemedio();
+                        break;
+                    case 3:
+                        AtualizarQuantidadeDeRemedio();
+                        break;
+                    case 4:
+                        VisualizarRemediosAbaixoDoLimite();
+                        break;
+                    case 5:
+                        EditarRemedio();
+                        break;
+                    case 6:
+                        ExcluirRemedio();
+                        break;
+                    case 7:
+                        VerificarExistenciaRemedio();
+                        break;
+                    case 0:
+                        Console.WriteLine("Saindo...");
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida");
+                        break;
+                }
+
+                Console.WriteLine();
+            } while (opcao != 0);
+        } 
 
     static void InserirRemedio()
     {

@@ -6,226 +6,171 @@ using ControleDeMedicamentos.ModuloRequisição;
 
 namespace ControleDeMedicamentos.ModuloPaciente
 {
-     class TelaRequisicao:TelaMae
+    using System;
+
+    class TelaPaciente : TelaMae
     {
-       
-
-        public TelaRequisicao()
+        public void ExibirMenu()
         {
-            repositorioRequisicao = new RepositorioRequisicao();
-        }
+            int escolha = 0;
 
-        public void MostrarMenu()
-        {
-            bool sair = false;
-
-            while (!sair)
+            do
             {
-                Console.Clear();
-                Console.WriteLine("==== GERENCIAMENTO DE REQUISIÇÕES ====");
-                Console.WriteLine("Escolha uma opção:");
-                Console.WriteLine("1 - Criar nova requisição");
-                Console.WriteLine("2 - Excluir requisição");
-                Console.WriteLine("3 - Editar requisição");
-                Console.WriteLine("4 - Consultar requisição");
-                Console.WriteLine("5 - Listar todos os Pacientes");
-               
-                Console.WriteLine("0 - Voltar");
+                Console.WriteLine("===== MENU PACIENTE =====");
+                Console.WriteLine("1. Cadastrar Paciente");
+                Console.WriteLine("2. Excluir Paciente");
+                Console.WriteLine("3. Editar Paciente");
+                Console.WriteLine("4. Consultar Paciente");
+                Console.WriteLine("5. Listar Pacientes");
+                Console.WriteLine("0. Voltar ao menu principal");
+                Console.Write("Escolha uma opção: ");
+                escolha = int.Parse(Console.ReadLine());
 
-                int opcao = int.Parse(Console.ReadLine());
-
-                switch (opcao)
+                switch (escolha)
                 {
                     case 0:
-                        sair = true;
+                        Console.WriteLine("Retornando ao menu principal...");
                         break;
-
                     case 1:
-                        CriarRequisicao();
+                        CadastrarPaciente();
                         break;
-
                     case 2:
-                        ExcluirRequisicao();
+                        ExcluirPaciente();
                         break;
-
                     case 3:
-                        EditarRequisicao();
+                        EditarPaciente();
                         break;
-
                     case 4:
-                        ConsultarRequisicao();
+                        ConsultarPaciente();
                         break;
-
                     case 5:
-                        repositorioPaciente.ListarPacientes();
+                        ListarPacientes();
                         break;
-
-                   
-
                     default:
-                        Console.WriteLine("Opção inválida. Tente novamente.");
+                        Console.WriteLine("Opção inválida.");
                         break;
                 }
 
                 Console.WriteLine("Pressione qualquer tecla para continuar...");
                 Console.ReadKey();
+                Console.Clear();
+            } while (escolha != 0);
+        }
+
+        private void CadastrarPaciente()
+        {
+            Console.WriteLine("===== CADASTRAR PACIENTE =====");
+            Console.Write("Nome: ");
+            string nome = Console.ReadLine();
+            Console.Write("CPF: ");
+            string cpf = Console.ReadLine();
+            Console.WriteLine("ID: ");
+            int id = int.Parse(Console.ReadLine());
+            Console.Write("Cartão do SUS: ");
+            string cartaoDoSUS = Console.ReadLine();
+            Console.Write("Telefone: ");
+            string telefone = Console.ReadLine();
+            Console.Write("Endereço: ");
+            string endereco = Console.ReadLine();
+
+            Paciente paciente = new Paciente();
+
+            if (repositorioPaciente.VerificarExistenciaPaciente(nome))
+            {
+                Console.WriteLine($"O paciente {nome} já está cadastrado.");
+            }
+            else
+            {
+                repositorioPaciente.Inserir(paciente);
+                Console.WriteLine($"O paciente {nome} foi cadastrado com sucesso.");
             }
         }
 
-        private void CriarRequisicao()
+        private void ExcluirPaciente()
         {
-            Console.Clear();
-            Console.WriteLine("==== CRIAÇÃO DE NOVA REQUISIÇÃO ====");
-            Console.WriteLine("Digite o nome do paciente:");
-            string nomePaciente = Console.ReadLine();
-            Paciente paciente = repositorioRequisicao.repositorioPaciente.ConsultarPaciente(nomePaciente);
+            Console.WriteLine("===== EXCLUIR PACIENTE =====");
+            Console.Write("Nome do paciente a ser excluído: ");
+            string nome = Console.ReadLine();
+
+            if (repositorioPaciente.VerificarExistenciaPaciente(nome))
+            {
+                repositorioPaciente.ExcluirPaciente(nome);
+                Console.WriteLine($"O paciente {nome} foi excluído com sucesso.");
+            }
+        }
+
+        private void EditarPaciente()
+        {
+            Console.WriteLine("===== EDITAR PACIENTE =====");
+            Console.Write("Nome do paciente a ser editado: ");
+            string nome = Console.ReadLine();
+
+            if (repositorioPaciente.VerificarExistenciaPaciente(nome))
+            {
+                Paciente paciente = repositorioPaciente.ConsultarPaciente(nome);
+
+                Console.Write("Novo CPF (ou deixe em branco para manter o CPF atual): ");
+                string cpf = Console.ReadLine();
+                if (!string.IsNullOrEmpty(cpf))
+                {
+                    paciente.CPF = cpf;
+                }
+
+                Console.Write("Novo Cartão do SUS (ou deixe em branco para manter o Cartão do SUS atual): ");
+                string cartaoDoSUS = Console.ReadLine();
+                if (!string.IsNullOrEmpty(cartaoDoSUS))
+                {
+                    paciente.CartaoDoSUS = cartaoDoSUS;
+                }
+
+                Console.Write("Novo Telefone (ou deixe em branco para manter o Telefone atual): ");
+                string telefone = Console.ReadLine();
+                if (!string.IsNullOrEmpty(telefone))
+                {
+                    paciente.Telefone = telefone;
+                }
+
+                Console.Write("Novo Endereço (ou deixe em branco para manter o Endereço atual): ");
+                string endereco = Console.ReadLine();
+                if (!string.IsNullOrEmpty(endereco))
+                {
+                    paciente.Endereco = endereco;
+                }
+
+                Console.WriteLine($"O paciente {nome} foi atualizado com sucesso.");
+            }
+        }
+        private void ConsultarPaciente()
+        {
+            Console.WriteLine("===== CONSULTAR PACIENTE =====");
+            Console.Write("Nome do paciente a ser consultado: ");
+            string nome = Console.ReadLine();
+
+            Paciente paciente = repositorioPaciente.ConsultarPaciente(nome);
+
             if (paciente == null)
             {
-                Console.WriteLine($"Paciente {nomePaciente} não encontrado.");
-                return;
-            }
-
-            Console.WriteLine("Digite o nome do remédio:");
-            string nomeRemedio = Console.ReadLine();
-            Remedio remedio = repositorioRequisicao.repositorioRemedio.ConsultarRemedio(nomeRemedio);
-            if (remedio == null)
-            {
-                Console.WriteLine($"Remédio {nomeRemedio} não encontrado.");
-                return;
-            }
-
-            Console.WriteLine("Digite a quantidade solicitada:");
-            int quantidadeSolicitada = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite o nome do funcionário responsável:");
-            string nomeFuncionario = Console.ReadLine();
-            Funcionario funcionario = repositorioRequisicao.repositorioFuncionario.ConsultarFuncionario(nomeFuncionario);
-            if (funcionario == null)
-            {
-                Console.WriteLine($"Funcionário {nomeFuncionario} não encontrado.");
-                return;
-            }
-
-            repositorioRequisicao.CriarRequisicao(paciente, remedio, quantidadeSolicitada, funcionario, nomePaciente);
-        }
-
-        private void ExcluirRequisicao()
-        {
-            Console.Clear();
-            Console.WriteLine("==== EXCLUSÃO DE REQUISIÇÃO ====");
-            Console.WriteLine("Digite a data da requisição (DD/MM/AAAA):");
-            string dataDeRequisicao = Console.ReadLine();
-
-            Requisicao requisicaoEncontrada = repositorioRequisicao.ConsultarRequisicao(dataDeRequisicao);
-
-            if (requisicaoEncontrada == null)
-            {
-                Console.WriteLine("Não foi encontrada uma requisição com a data informada.");
+                Console.WriteLine($"O paciente {nome} não foi encontrado.");
             }
             else
             {
-                repositorioRequisicao.ExcluirRequisicao(dataDeRequisicao);
-                Console.WriteLine("Requisição excluída com sucesso!");
+                Console.WriteLine($"Nome: {paciente.Nome} | CPF: {paciente.CPF} | Cartão do SUS: {paciente.CartaoDoSUS} | Telefone: {paciente.Telefone} | Endereço: {paciente.Endereco}");
             }
-
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
         }
-        private void EditarRequisicao()
+        private void ListarPacientes()
         {
-            Console.Clear();
-            Console.WriteLine("==== EDIÇÃO DE REQUISIÇÃO ====");
-            Console.WriteLine("Digite a data da requisição a ser editada (DD/MM/AAAA):");
-            string dataDeRequisicao = Console.ReadLine();
-
-            Requisicao requisicaoEncontrada = repositorioRequisicao.ConsultarRequisicao(dataDeRequisicao);
-
-            if (requisicaoEncontrada == null)
+            Console.WriteLine("===== LISTAR PACIENTES =====");
+            if (repositorioPaciente.listaRegistros.Count == 0)
             {
-                Console.WriteLine("Não foi encontrada uma requisição com a data informada.");
+                Console.WriteLine("Não há pacientes cadastrados.");
             }
             else
             {
-                Console.WriteLine("Dados da requisição:");
-                Console.WriteLine($"Paciente: {requisicaoEncontrada.paciente.Nome}");
-                Console.WriteLine($"Remédio: {requisicaoEncontrada.remedio.Nome}");
-                Console.WriteLine($"Quantidade solicitada: {requisicaoEncontrada.quantidadeDeRemedioSolicitada}");
-                Console.WriteLine($"Funcionário responsável: {requisicaoEncontrada.funcionario.Nome}");
-                Console.WriteLine();
-                Console.WriteLine("Digite os novos dados da requisição:");
-
-                Console.WriteLine("Digite o nome do paciente:");
-                string nomePaciente = Console.ReadLine();
-                Paciente paciente = repositorioRequisicao.repositorioPaciente.ConsultarPaciente(nomePaciente);
-                if (paciente == null)
-                {
-                    Console.WriteLine($"Paciente {nomePaciente} não encontrado.");
-                    return;
-                }
-
-                Console.WriteLine("Digite o nome do remédio:");
-                string nomeRemedio = Console.ReadLine();
-                Remedio remedio = repositorioRequisicao.repositorioRemedio.ConsultarRemedio(nomeRemedio);
-                if (remedio == null)
-                {
-                    Console.WriteLine($"Remédio {nomeRemedio} não encontrado.");
-                    return;
-                }
-
-                Console.WriteLine("Digite a quantidade solicitada:");
-                int quantidadeSolicitada;
-                if (!int.TryParse(Console.ReadLine(), out quantidadeSolicitada))
-                {
-                    Console.WriteLine("Quantidade informada inválida. Digite um número inteiro válido.");
-                    return;
-                }
-
-                Console.WriteLine("Digite o nome do funcionário responsável:");
-                string nomeFuncionario = Console.ReadLine();
-                Funcionario funcionario = repositorioRequisicao.repositorioFuncionario.ConsultarFuncionario(nomeFuncionario);
-                if (funcionario == null)
-                {
-                    Console.WriteLine($"Funcionário {nomeFuncionario} não encontrado.");
-                    return;
-                }
-
-                repositorioRequisicao.EditarRequisicao(dataDeRequisicao, paciente, remedio, quantidadeSolicitada, funcionario);
-                Console.WriteLine("Requisição editada com sucesso!");
+                Console.WriteLine("Pacientes cadastrados:");
+                repositorioPaciente.ListarPacientes();
             }
-
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
         }
-        private void ConsultarRequisicao()
-        {
-            Console.Clear();
-            Console.WriteLine("==== CONSULTA DE REQUISIÇÃO ====");
-            Console.WriteLine("Digite a data da requisição (DD/MM/AAAA):");
-            string dataDeRequisicao = Console.ReadLine();
-
-            Requisicao requisicaoEncontrada = repositorioRequisicao.ConsultarRequisicao(dataDeRequisicao);
-
-            if (requisicaoEncontrada == null)
-            {
-                Console.WriteLine("Não foi encontrada uma requisição com a data informada.");
-            }
-            else
-            {
-                Console.WriteLine("Dados da requisição:");
-                Console.WriteLine($"Paciente: {requisicaoEncontrada.paciente.Nome}");
-                Console.WriteLine($"Remédio: {requisicaoEncontrada.remedio.Nome}");
-                Console.WriteLine($"Quantidade solicitada: {requisicaoEncontrada.quantidadeDeRemedioSolicitada}");
-                Console.WriteLine($"Funcionário responsável: {requisicaoEncontrada.funcionario.Nome}");
-                Console.WriteLine();
-            }
-
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
-        }
-
-       
-
-
 
     }
 }
+
